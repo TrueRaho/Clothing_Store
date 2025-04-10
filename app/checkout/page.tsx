@@ -48,10 +48,6 @@ export default function Checkout() {
                     <input type="radio" id="delivery2" name="delivery" className="mr-2" />
                     <label htmlFor="delivery2">Самовывоз (бесплатно)</label>
                   </div>
-                  <div className="flex items-center">
-                    <input type="radio" id="delivery3" name="delivery" className="mr-2" />
-                    <label htmlFor="delivery3">Почта России (300 ₴)</label>
-                  </div>
                 </div>
               </div>
 
