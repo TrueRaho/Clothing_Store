@@ -63,7 +63,7 @@ export default function Cart() {
                     <td className="py-4">
                       {item.size}, {item.color}
                     </td>
-                    <td className="py-4">{item.price} ₽</td>
+                    <td className="py-4">{item.price} ₴</td>
                     <td className="py-4">
                       <div className="flex items-center">
                         <button className="w-8 h-8 border border-gray-200 flex items-center justify-center">-</button>
@@ -71,7 +71,7 @@ export default function Cart() {
                         <button className="w-8 h-8 border border-gray-200 flex items-center justify-center">+</button>
                       </div>
                     </td>
-                    <td className="py-4">{item.price * item.quantity} ₽</td>
+                    <td className="py-4">{item.price * item.quantity} ₴</td>
                     <td className="py-4">
                       <button>
                         <Trash2 className="w-5 h-5 text-gray-400 hover:text-[#333]" />
@@ -84,7 +84,7 @@ export default function Cart() {
 
             <div className="flex justify-between items-center border-t border-gray-100 pt-6">
               <div>
-                <p className="text-xl">Итого: {total} ₽</p>
+                <p className="text-xl">Итого: {total} ₴</p>
               </div>
               <Link href="/checkout" className="px-8 py-3 bg-[#c1b6ad] text-white">
                 Оформить заказ

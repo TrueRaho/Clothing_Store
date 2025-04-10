@@ -22,7 +22,7 @@ export function ProductCard({ id, name, price, image }: ProductCardProps) {
           />
         </div>
         <h3 className="text-[#333] mb-1">{name}</h3>
-        <p className="text-[#333] mb-3">{price} ₽</p>
+        <p className="text-[#333] mb-3">{price} ₴</p>
         <button className="w-full py-2 border border-[#c1b6ad] text-[#333] hover:bg-[#c1b6ad] hover:text-white transition-colors">
           Подробнее
         </button>

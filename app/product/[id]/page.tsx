@@ -37,7 +37,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
           <div>
             <h1 className="text-2xl mb-2">{product.name}</h1>
-            <p className="text-2xl mb-6">{product.price} ₽</p>
+            <p className="text-2xl mb-6">{product.price} ₴</p>
 
             <div className="mb-6">
               <p className="mb-2">Размер</p>

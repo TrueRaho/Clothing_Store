@@ -42,7 +42,7 @@ export default function Checkout() {
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <input type="radio" id="delivery1" name="delivery" className="mr-2" defaultChecked />
-                    <label htmlFor="delivery1">Курьер (500 ₽)</label>
+                    <label htmlFor="delivery1">Курьер (500 ₴)</label>
                   </div>
                   <div className="flex items-center">
                     <input type="radio" id="delivery2" name="delivery" className="mr-2" />
@@ -50,7 +50,7 @@ export default function Checkout() {
                   </div>
                   <div className="flex items-center">
                     <input type="radio" id="delivery3" name="delivery" className="mr-2" />
-                    <label htmlFor="delivery3">Почта России (300 ₽)</label>
+                    <label htmlFor="delivery3">Почта России (300 ₴)</label>
                   </div>
                 </div>
               </div>
