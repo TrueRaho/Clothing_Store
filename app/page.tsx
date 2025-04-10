@@ -18,7 +18,6 @@ export default function Home() {
               priority
             />
           </div>
-          // check
           <h1 className="text-3xl mb-4">Дом. Ты. И ничего лишнего.</h1>
           <Link
             href="/catalog"
