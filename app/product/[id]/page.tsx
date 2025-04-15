@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { ProductCard } from "@/components/product-card"
 import { use } from "react"
+import Cookies from 'js-cookie'
 
 type Product = {
   id: string
@@ -36,6 +37,12 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   const [isAddingToCart, setIsAddingToCart] = useState(false)
 
   useEffect(() => {
+    // Устанавливаем ID пользователя в cookie, если его нет
+    if (!Cookies.get('userId')) {
+      const userId = 'user-' + Math.random().toString(36).substr(2, 9)
+      Cookies.set('userId', userId, { expires: 365 })
+    }
+
     const fetchData = async () => {
       try {
         // Fetch product data

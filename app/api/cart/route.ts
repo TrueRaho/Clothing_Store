@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]/route'
+import { cookies } from 'next/headers'
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user?.email) {
-      return new NextResponse('Unauthorized', { status: 401 })
+    const cookieStore = await cookies()
+    const userId = cookieStore.get('userId')?.value
+
+    if (!userId) {
+      return NextResponse.json([])
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+    let user = await prisma.user.findUnique({
+      where: { id: userId },
       include: {
         cart: {
           include: {
@@ -26,11 +27,29 @@ export async function GET() {
     })
 
     if (!user) {
-      return new NextResponse('User not found', { status: 404 })
+      // Создаем нового пользователя, если его нет
+      user = await prisma.user.create({
+        data: {
+          id: userId,
+          name: 'Гость',
+          email: `${userId}@example.com`,
+          password: 'guest'
+        },
+        include: {
+          cart: {
+            include: {
+              items: {
+                include: {
+                  product: true
+                }
+              }
+            }
+          }
+        }
+      })
     }
 
     if (!user.cart) {
-      // Создаем корзину, если она не существует
       const newCart = await prisma.cart.create({
         data: {
           userId: user.id
@@ -49,15 +68,17 @@ export async function GET() {
     return NextResponse.json(user.cart.items)
   } catch (error) {
     console.error('Error fetching cart:', error)
-    return new NextResponse('Internal Server Error', { status: 500 })
+    return NextResponse.json([])
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user?.email) {
-      return new NextResponse('Unauthorized', { status: 401 })
+    const cookieStore = await cookies()
+    const userId = cookieStore.get('userId')?.value
+
+    if (!userId) {
+      return new NextResponse('User not found', { status: 404 })
     }
 
     const { productId, size, color, quantity } = await request.json()
@@ -66,13 +87,22 @@ export async function POST(request: Request) {
       return new NextResponse('Missing required fields', { status: 400 })
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+    let user = await prisma.user.findUnique({
+      where: { id: userId },
       include: { cart: true }
     })
 
     if (!user) {
-      return new NextResponse('User not found', { status: 404 })
+      // Создаем нового пользователя, если его нет
+      user = await prisma.user.create({
+        data: {
+          id: userId,
+          name: 'Гость',
+          email: `${userId}@example.com`,
+          password: 'guest'
+        },
+        include: { cart: true }
+      })
     }
 
     let cart = user.cart
