@@ -4,8 +4,6 @@ const prisma = new PrismaClient()
 
 async function main() {
   // Очищаем существующие данные
-  await prisma.cartItem.deleteMany()
-  await prisma.cart.deleteMany()
   await prisma.product.deleteMany()
 
   // Добавляем товары
