@@ -57,9 +57,13 @@ export async function GET(request: Request) {
       }
     })
 
+    if (!Array.isArray(products)) {
+      throw new Error('Products is not an array')
+    }
+
     return NextResponse.json(products)
   } catch (error) {
     console.error('Error fetching products:', error)
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch products', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 })
   }
 } 
