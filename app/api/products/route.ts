@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   try {
+    console.log('Fetching products with params:', request.url)
+    
     const { searchParams } = new URL(request.url)
     const where: any = {}
 
@@ -43,6 +45,8 @@ export async function GET(request: Request) {
       }
     }
 
+    console.log('Prisma query:', where)
+
     const products = await prisma.product.findMany({
       where,
       select: {
@@ -57,13 +61,23 @@ export async function GET(request: Request) {
       }
     })
 
+    console.log('Found products:', products.length)
+
     if (!Array.isArray(products)) {
+      console.error('Products is not an array:', products)
       throw new Error('Products is not an array')
     }
 
     return NextResponse.json(products)
   } catch (error) {
-    console.error('Error fetching products:', error)
-    return NextResponse.json({ error: 'Failed to fetch products', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 })
+    console.error('Error in products API:', error)
+    return NextResponse.json(
+      { 
+        error: 'Failed to fetch products', 
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      }, 
+      { status: 500 }
+    )
   }
 } 
