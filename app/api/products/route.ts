@@ -45,7 +45,16 @@ export async function GET(request: Request) {
       }
     }
 
-    console.log('Prisma query:', where)
+    console.log('Prisma query:', JSON.stringify(where, null, 2))
+
+    // Проверяем подключение к базе данных
+    try {
+      await prisma.$connect()
+      console.log('Database connection successful')
+    } catch (error) {
+      console.error('Database connection error:', error)
+      throw new Error('Failed to connect to database')
+    }
 
     const products = await prisma.product.findMany({
       where,
@@ -79,5 +88,12 @@ export async function GET(request: Request) {
       }, 
       { status: 500 }
     )
+  } finally {
+    try {
+      await prisma.$disconnect()
+      console.log('Database disconnected')
+    } catch (error) {
+      console.error('Error disconnecting from database:', error)
+    }
   }
 } 
