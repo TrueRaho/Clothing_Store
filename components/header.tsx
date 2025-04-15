@@ -5,12 +5,17 @@ import { Search, ShoppingBag, User, LogOut, ChevronDown } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useState, useRef, useEffect } from "react"
 import { useCart } from "@/lib/hooks/use-cart"
+import { useRouter } from "next/navigation"
 
 export function Header() {
   const { user, logout, isAuthenticated } = useAuth()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { totalItems } = useCart()
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchResults, setSearchResults] = useState([])
+  const [isSearching, setIsSearching] = useState(false)
+  const router = useRouter()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -25,6 +30,36 @@ export function Header() {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
+
+  useEffect(() => {
+    const search = async () => {
+      if (searchQuery.length < 2) {
+        setSearchResults([])
+        return
+      }
+
+      setIsSearching(true)
+      try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`)
+        const data = await response.json()
+        setSearchResults(data.products || [])
+      } catch (error) {
+        console.error('Search error:', error)
+      } finally {
+        setIsSearching(false)
+      }
+    }
+
+    const debounceTimer = setTimeout(search, 300)
+    return () => clearTimeout(debounceTimer)
+  }, [searchQuery])
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/catalog?search=${encodeURIComponent(searchQuery)}`)
+    }
+  }
 
   return (
     <header className="py-6 border-b border-gray-100">
@@ -46,14 +81,32 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-6">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Поиск"
-              className="pl-3 pr-8 py-1 border border-gray-200 focus:outline-none focus:border-[#c1b6ad]"
-            />
-            <Search className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-          </div>
+          <form onSubmit={handleSearchSubmit} className="flex-1 max-w-md mx-8">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Поиск"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-3 pr-8 py-1 border border-gray-200 focus:outline-none focus:border-[#c1b6ad]"
+              />
+              <Search className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              
+              {searchResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 mt-1 rounded shadow-lg z-50">
+                  {searchResults.map((product: any) => (
+                    <Link
+                      key={product.id}
+                      href={`/product/${product.id}`}
+                      className="block p-2 hover:bg-gray-50"
+                    >
+                      {product.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </form>
 
           {isAuthenticated ? (
             <div className="relative" ref={dropdownRef}>

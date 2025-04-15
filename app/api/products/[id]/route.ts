@@ -11,12 +11,18 @@ export async function GET(
     })
 
     if (!product) {
-      return new NextResponse('Product not found', { status: 404 })
+      return NextResponse.json(
+        { error: 'Товар не найден' },
+        { status: 404 }
+      )
     }
 
     return NextResponse.json(product)
   } catch (error) {
     console.error('Error fetching product:', error)
-    return new NextResponse('Internal Server Error', { status: 500 })
+    return NextResponse.json(
+      { error: 'Ошибка при получении товара' },
+      { status: 500 }
+    )
   }
 } 
