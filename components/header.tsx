@@ -11,7 +11,7 @@ export function Header() {
   const { user, logout, isAuthenticated } = useAuth()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const { totalItems } = useCart()
+  const { totalItems, loading } = useCart()
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [isSearching, setIsSearching] = useState(false)
@@ -50,108 +50,100 @@ export function Header() {
       }
     }
 
-    const debounceTimer = setTimeout(search, 300)
-    return () => clearTimeout(debounceTimer)
+    search()
   }, [searchQuery])
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/catalog?search=${encodeURIComponent(searchQuery)}`)
+    if (searchQuery) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
     }
   }
 
   return (
-    <header className="py-6 border-b border-gray-100">
-      <div className="container mx-auto flex items-center justify-between">
-        <Link href="/" className="text-xl font-medium">
-          Затишок & Стиль
-        </Link>
+    <header className="bg-white shadow-sm">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="text-2xl font-bold text-[#333]">
+            Home Clothing
+          </Link>
 
-        <nav className="hidden md:flex space-x-8">
-          <Link href="/catalog" className="text-gray-800 hover:text-[#c1b6ad]">
-            Каталог
-          </Link>
-          <Link href="/about" className="text-gray-800 hover:text-[#c1b6ad]">
-            О нас
-          </Link>
-          <Link href="/contacts" className="text-gray-800 hover:text-[#c1b6ad]">
-            Контакты
-          </Link>
-        </nav>
-
-        <div className="flex items-center space-x-6">
-          <form onSubmit={handleSearchSubmit} className="flex-1 max-w-md mx-8">
+          <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl mx-8">
             <div className="relative">
               <input
                 type="text"
-                placeholder="Поиск"
+                placeholder="Поиск..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-3 pr-8 py-1 border border-gray-200 focus:outline-none focus:border-[#c1b6ad]"
+                className="w-full px-4 py-2 border border-[#c1b6ad] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c1b6ad]"
               />
-              <Search className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              
-              {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 mt-1 rounded shadow-lg z-50">
-                  {searchResults.map((product: any) => (
-                    <Link
-                      key={product.id}
-                      href={`/product/${product.id}`}
-                      className="block p-2 hover:bg-gray-50"
-                    >
-                      {product.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#c1b6ad]"
+              >
+                <Search size={20} />
+              </button>
             </div>
+            {isSearching && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-[#c1b6ad] rounded-lg shadow-lg">
+                <div className="p-2">Поиск...</div>
+              </div>
+            )}
+            {searchResults.length > 0 && !isSearching && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-[#c1b6ad] rounded-lg shadow-lg">
+                {searchResults.map((product: any) => (
+                  <Link
+                    key={product.id}
+                    href={`/product/${product.id}`}
+                    className="block p-2 hover:bg-gray-50"
+                  >
+                    {product.name}
+                  </Link>
+                ))}
+              </div>
+            )}
           </form>
 
-          {isAuthenticated ? (
-            <div className="relative" ref={dropdownRef}>
-              <button
-                className="flex items-center text-gray-800 hover:text-[#c1b6ad]"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <div className="w-8 h-8 bg-[#c1b6ad] rounded-full flex items-center justify-center text-white mr-2">
-                  {user?.name.charAt(0)}
-                </div>
-                <span className="mr-1">{user?.name.split(" ")[0]}</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 shadow-sm z-10">
-                  <div className="py-2 px-4 border-b border-gray-100">
-                    <p className="font-medium">{user?.name}</p>
-                    <p className="text-sm text-gray-500">{user?.email}</p>
-                  </div>
-                  <button
-                    className="w-full text-left px-4 py-2 flex items-center text-gray-800 hover:bg-gray-50"
-                    onClick={logout}
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Выйти
-                  </button>
-                </div>
+          <div className="flex items-center space-x-4">
+            <Link href="/cart" className="relative">
+              <ShoppingBag size={24} className="text-[#333]" />
+              {!loading && totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#c1b6ad] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
               )}
-            </div>
-          ) : (
-            <Link href="/login" className="text-gray-800 hover:text-[#c1b6ad] flex items-center">
-              <User className="w-4 h-4 mr-1" />
-              Войти
             </Link>
-          )}
 
-          <Link href="/cart" className="relative">
-            <ShoppingBag className="w-5 h-5 text-gray-800" />
-            {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#c1b6ad] text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                {totalItems}
-              </span>
+            {isAuthenticated ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center space-x-1"
+                >
+                  <User size={24} className="text-[#333]" />
+                  <ChevronDown size={16} className="text-[#333]" />
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-[#c1b6ad] rounded-lg shadow-lg">
+                    <div className="p-4">
+                      <p className="text-sm text-[#333] mb-2">{user?.email}</p>
+                      <button
+                        onClick={logout}
+                        className="flex items-center space-x-2 text-sm text-[#333] hover:text-[#c1b6ad]"
+                      >
+                        <LogOut size={16} />
+                        <span>Выйти</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link href="/login" className="text-[#333] hover:text-[#c1b6ad]">
+                Войти
+              </Link>
             )}
-          </Link>
+          </div>
         </div>
       </div>
     </header>
