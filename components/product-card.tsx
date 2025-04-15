@@ -1,6 +1,7 @@
+'use client'
+
 import Image from "next/image"
 import Link from "next/link"
-import { useCart } from "@/lib/hooks/use-cart"
 import { useState } from "react"
 
 interface ProductCardProps {
@@ -13,7 +14,6 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ id, name, price, image, sizes, colors }: ProductCardProps) {
-  const { addToCart } = useCart()
   const [selectedSize, setSelectedSize] = useState(sizes[0])
   const [selectedColor, setSelectedColor] = useState(colors[0])
   const [isAdding, setIsAdding] = useState(false)
@@ -21,7 +21,19 @@ export function ProductCard({ id, name, price, image, sizes, colors }: ProductCa
   const handleAddToCart = async () => {
     try {
       setIsAdding(true)
-      await addToCart(id, selectedSize, selectedColor)
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: id, size: selectedSize, color: selectedColor, quantity: 1 }),
+      })
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          window.location.href = '/login'
+          return
+        }
+        throw new Error('Failed to add to cart')
+      }
     } catch (error) {
       console.error('Error adding to cart:', error)
     } finally {
