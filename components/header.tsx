@@ -1,28 +1,19 @@
 "use client"
 
 import Link from "next/link"
-import { Search, ShoppingBag, User, LogOut, ChevronDown } from "lucide-react"
+import { ShoppingBag } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useState, useRef, useEffect } from "react"
-import { useCart } from "@/lib/hooks/use-cart"
 import { useRouter } from "next/navigation"
-import { cookies } from 'next/headers'
-import { prisma } from '@/lib/prisma'
 
-async function getCartItemsCount() {
-  const userId = cookies().get('userId')?.value
-  if (!userId) return 0
-
-  const cart = await prisma.cart.findUnique({
-    where: { userId },
-    include: { items: true }
-  })
-
-  return cart?.items.reduce((sum, item) => sum + item.quantity, 0) || 0
-}
-
-export async function Header() {
-  const totalItems = await getCartItemsCount()
+export function Header({ cartItemsCount = 0 }: { cartItemsCount?: number }) {
+  const { user, logout, isAuthenticated } = useAuth()
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchResults, setSearchResults] = useState([])
+  const [isSearching, setIsSearching] = useState(false)
+  const router = useRouter()
 
   return (
     <header className="bg-white border-b border-[#c1b6ad]">
@@ -38,9 +29,9 @@ export async function Header() {
             </Link>
             <Link href="/cart" className="relative text-[#333] hover:text-[#c1b6ad]">
               Корзина
-              {totalItems > 0 && (
+              {cartItemsCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-[#c1b6ad] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {totalItems}
+                  {cartItemsCount}
                 </span>
               )}
             </Link>
