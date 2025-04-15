@@ -27,15 +27,14 @@ export function Header({ cartItemsCount = 0 }: { cartItemsCount?: number }) {
             <Link href="/catalog" className="text-[#333] hover:text-[#c1b6ad]">
               Каталог
             </Link>
-            <Link href="/cart" className="relative text-[#333] hover:text-[#c1b6ad]">
-              Корзина
-              {cartItemsCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#c1b6ad] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartItemsCount}
-                </span>
-              )}
-            </Link>
           </nav>
+
+          <Link href="/cart" className="relative">
+            <ShoppingBag className="w-5 h-5 text-gray-800" />
+            <span className="absolute -top-1 -right-1 bg-[#c1b6ad] text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+              0
+            </span>
+          </Link>
         </div>
       </div>
     </header>
