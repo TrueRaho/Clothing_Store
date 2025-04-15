@@ -3,7 +3,7 @@
 import { Header } from "@/components/header"
 import { ProductCard } from "@/components/product-card"
 import { useSearchParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 
 interface Product {
   id: string
@@ -16,7 +16,7 @@ interface Product {
   composition: string
 }
 
-export default function Catalog() {
+function CatalogContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
@@ -166,5 +166,13 @@ export default function Catalog() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function Catalog() {
+  return (
+    <Suspense fallback={<div>Загрузка...</div>}>
+      <CatalogContent />
+    </Suspense>
   )
 }
