@@ -2307,6 +2307,7 @@ export namespace Prisma {
     composition: string | null
     care: string | null
     image: string | null
+    category: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2319,6 +2320,7 @@ export namespace Prisma {
     composition: string | null
     care: string | null
     image: string | null
+    category: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2333,6 +2335,7 @@ export namespace Prisma {
     image: number
     colors: number
     sizes: number
+    category: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2355,6 +2358,7 @@ export namespace Prisma {
     composition?: true
     care?: true
     image?: true
+    category?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2367,6 +2371,7 @@ export namespace Prisma {
     composition?: true
     care?: true
     image?: true
+    category?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2381,6 +2386,7 @@ export namespace Prisma {
     image?: true
     colors?: true
     sizes?: true
+    category?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2482,6 +2488,7 @@ export namespace Prisma {
     image: string
     colors: string[]
     sizes: string[]
+    category: string
     createdAt: Date
     updatedAt: Date
     _count: ProductCountAggregateOutputType | null
@@ -2515,6 +2522,7 @@ export namespace Prisma {
     image?: boolean
     colors?: boolean
     sizes?: boolean
+    category?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
@@ -2531,6 +2539,7 @@ export namespace Prisma {
     image?: boolean
     colors?: boolean
     sizes?: boolean
+    category?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["product"]>
@@ -2545,6 +2554,7 @@ export namespace Prisma {
     image?: boolean
     colors?: boolean
     sizes?: boolean
+    category?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["product"]>
@@ -2559,11 +2569,12 @@ export namespace Prisma {
     image?: boolean
     colors?: boolean
     sizes?: boolean
+    category?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "description" | "composition" | "care" | "image" | "colors" | "sizes" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "description" | "composition" | "care" | "image" | "colors" | "sizes" | "category" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
@@ -2586,6 +2597,7 @@ export namespace Prisma {
       image: string
       colors: string[]
       sizes: string[]
+      category: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["product"]>
@@ -3021,6 +3033,7 @@ export namespace Prisma {
     readonly image: FieldRef<"Product", 'String'>
     readonly colors: FieldRef<"Product", 'String[]'>
     readonly sizes: FieldRef<"Product", 'String[]'>
+    readonly category: FieldRef<"Product", 'String'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
   }
@@ -5703,6 +5716,7 @@ export namespace Prisma {
     image: 'image',
     colors: 'colors',
     sizes: 'sizes',
+    category: 'category',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -5887,6 +5901,7 @@ export namespace Prisma {
     image?: StringFilter<"Product"> | string
     colors?: StringNullableListFilter<"Product">
     sizes?: StringNullableListFilter<"Product">
+    category?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     cartItems?: CartItemListRelationFilter
@@ -5902,6 +5917,7 @@ export namespace Prisma {
     image?: SortOrder
     colors?: SortOrder
     sizes?: SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cartItems?: CartItemOrderByRelationAggregateInput
@@ -5920,6 +5936,7 @@ export namespace Prisma {
     image?: StringFilter<"Product"> | string
     colors?: StringNullableListFilter<"Product">
     sizes?: StringNullableListFilter<"Product">
+    category?: StringFilter<"Product"> | string
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     cartItems?: CartItemListRelationFilter
@@ -5935,6 +5952,7 @@ export namespace Prisma {
     image?: SortOrder
     colors?: SortOrder
     sizes?: SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProductCountOrderByAggregateInput
@@ -5957,6 +5975,7 @@ export namespace Prisma {
     image?: StringWithAggregatesFilter<"Product"> | string
     colors?: StringNullableListFilter<"Product">
     sizes?: StringNullableListFilter<"Product">
+    category?: StringWithAggregatesFilter<"Product"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
   }
@@ -6167,6 +6186,7 @@ export namespace Prisma {
     image: string
     colors?: ProductCreatecolorsInput | string[]
     sizes?: ProductCreatesizesInput | string[]
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
     cartItems?: CartItemCreateNestedManyWithoutProductInput
@@ -6182,6 +6202,7 @@ export namespace Prisma {
     image: string
     colors?: ProductCreatecolorsInput | string[]
     sizes?: ProductCreatesizesInput | string[]
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
@@ -6197,6 +6218,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     colors?: ProductUpdatecolorsInput | string[]
     sizes?: ProductUpdatesizesInput | string[]
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
@@ -6212,6 +6234,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     colors?: ProductUpdatecolorsInput | string[]
     sizes?: ProductUpdatesizesInput | string[]
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
@@ -6227,6 +6250,7 @@ export namespace Prisma {
     image: string
     colors?: ProductCreatecolorsInput | string[]
     sizes?: ProductCreatesizesInput | string[]
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6241,6 +6265,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     colors?: ProductUpdatecolorsInput | string[]
     sizes?: ProductUpdatesizesInput | string[]
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6255,6 +6280,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     colors?: ProductUpdatecolorsInput | string[]
     sizes?: ProductUpdatesizesInput | string[]
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6515,6 +6541,7 @@ export namespace Prisma {
     image?: SortOrder
     colors?: SortOrder
     sizes?: SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6531,6 +6558,7 @@ export namespace Prisma {
     composition?: SortOrder
     care?: SortOrder
     image?: SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6543,6 +6571,7 @@ export namespace Prisma {
     composition?: SortOrder
     care?: SortOrder
     image?: SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7168,6 +7197,7 @@ export namespace Prisma {
     image: string
     colors?: ProductCreatecolorsInput | string[]
     sizes?: ProductCreatesizesInput | string[]
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7182,6 +7212,7 @@ export namespace Prisma {
     image: string
     colors?: ProductCreatecolorsInput | string[]
     sizes?: ProductCreatesizesInput | string[]
+    category: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7237,6 +7268,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     colors?: ProductUpdatecolorsInput | string[]
     sizes?: ProductUpdatesizesInput | string[]
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7251,6 +7283,7 @@ export namespace Prisma {
     image?: StringFieldUpdateOperationsInput | string
     colors?: ProductUpdatecolorsInput | string[]
     sizes?: ProductUpdatesizesInput | string[]
+    category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
