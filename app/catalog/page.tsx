@@ -1,19 +1,22 @@
 import { Header } from "@/components/header"
 import { ProductCard } from "@/components/product-card"
+import { prisma } from '@/lib/prisma'
 
-// Mock data for products
-const products = [
-  { id: "1", name: "Пижама из хлопка", price: 3990, image: "/placeholder.svg?height=400&width=400" },
-  { id: "2", name: "Халат льняной", price: 4990, image: "/placeholder.svg?height=400&width=400" },
-  { id: "3", name: "Домашний костюм", price: 5990, image: "/placeholder.svg?height=400&width=400" },
-  { id: "4", name: "Пижама с шортами", price: 3490, image: "/placeholder.svg?height=400&width=400" },
-  { id: "5", name: "Халат махровый", price: 5490, image: "/placeholder.svg?height=400&width=400" },
-  { id: "6", name: "Пижама фланелевая", price: 4290, image: "/placeholder.svg?height=400&width=400" },
-  { id: "7", name: "Домашний костюм оверсайз", price: 6490, image: "/placeholder.svg?height=400&width=400" },
-  { id: "8", name: "Пижама шелковая", price: 7990, image: "/placeholder.svg?height=400&width=400" },
-]
+interface Product {
+  id: string
+  name: string
+  price: number
+  image: string
+}
 
-export default function Catalog() {
+async function getProducts(): Promise<Product[]> {
+  const products = await prisma.product.findMany()
+  return products
+}
+
+export default async function Catalog() {
+  const products = await getProducts()
+
   return (
     <main className="min-h-screen bg-white text-[#333] font-['Inter',sans-serif]">
       <Header />
@@ -75,7 +78,13 @@ export default function Catalog() {
 
         <div className="grid grid-cols-4 gap-6">
           {products.map((product) => (
-            <ProductCard key={product.id} {...product} />
+            <ProductCard 
+              key={product.id} 
+              id={product.id}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+            />
           ))}
         </div>
       </div>

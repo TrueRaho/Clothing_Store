@@ -1,28 +1,96 @@
+"use client"
+
 import Image from "next/image"
+import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { ProductCard } from "@/components/product-card"
+import { use } from "react"
 
-// Mock data for a single product
-const product = {
-  id: "1",
-  name: "Пижама из хлопка",
-  price: 3990,
-  description: "Пижама из 100% органического хлопка. Свободный крой, минималистичный дизайн без лишних деталей.",
-  composition: "100% органический хлопок",
-  care: "Машинная стирка при 30°, не отбеливать, гладить при низкой температуре",
-  image: "/placeholder.svg?height=600&width=600",
-  colors: ["Белый", "Бежевый", "Серый"],
-  sizes: ["XS", "S", "M", "L", "XL"],
+type Product = {
+  id: string
+  name: string
+  price: number
+  description: string
+  composition: string
+  care: string
+  image: string
+  colors: string[]
+  sizes: string[]
 }
 
-// Mock data for similar products
-const similarProducts = [
-  { id: "2", name: "Пижама с шортами", price: 3490, image: "/placeholder.svg?height=400&width=400" },
-  { id: "3", name: "Пижама фланелевая", price: 4290, image: "/placeholder.svg?height=400&width=400" },
-  { id: "4", name: "Пижама шелковая", price: 7990, image: "/placeholder.svg?height=400&width=400" },
-]
+type SimilarProduct = {
+  id: string
+  name: string
+  price: number
+  image: string
+}
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params)
+  const [product, setProduct] = useState<Product | null>(null)
+  const [similarProducts, setSimilarProducts] = useState<SimilarProduct[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedSize, setSelectedSize] = useState<string | null>(null)
+  const [selectedColor, setSelectedColor] = useState<string | null>(null)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch product data
+        const productResponse = await fetch(`/api/products/${resolvedParams.id}`)
+        if (!productResponse.ok) throw new Error('Failed to fetch product')
+        const productData = await productResponse.json()
+        setProduct(productData)
+
+        // Fetch similar products
+        const similarResponse = await fetch(`/api/products/similar?currentProductId=${resolvedParams.id}`)
+        if (!similarResponse.ok) throw new Error('Failed to fetch similar products')
+        const similarData = await similarResponse.json()
+        setSimilarProducts(similarData)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [resolvedParams.id])
+
+  const handleAddToCart = async () => {
+    if (!selectedSize || !selectedColor) {
+      alert('Пожалуйста, выберите размер и цвет')
+      return
+    }
+
+    setIsAddingToCart(true)
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: product?.id,
+          size: selectedSize,
+          color: selectedColor,
+          quantity: 1
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to add to cart')
+      alert('Товар добавлен в корзину')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsAddingToCart(false)
+    }
+  }
+
+  if (loading) return <div>Загрузка...</div>
+  if (error) return <div>Ошибка: {error}</div>
+  if (!product) return <div>Товар не найден</div>
+
   return (
     <main className="min-h-screen bg-white text-[#333] font-['Inter',sans-serif]">
       <Header />
@@ -45,7 +113,10 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 {product.sizes.map((size) => (
                   <button
                     key={size}
-                    className="w-10 h-10 border border-gray-200 flex items-center justify-center hover:border-[#c1b6ad]"
+                    className={`w-10 h-10 border flex items-center justify-center ${
+                      selectedSize === size ? 'border-[#c1b6ad]' : 'border-gray-200 hover:border-[#c1b6ad]'
+                    }`}
+                    onClick={() => setSelectedSize(size)}
                   >
                     {size}
                   </button>
@@ -55,13 +126,25 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               <p className="mb-2">Цвет</p>
               <div className="flex space-x-2 mb-6">
                 {product.colors.map((color) => (
-                  <button key={color} className="px-3 py-1 border border-gray-200 hover:border-[#c1b6ad]">
+                  <button
+                    key={color}
+                    className={`px-3 py-1 border ${
+                      selectedColor === color ? 'border-[#c1b6ad]' : 'border-gray-200 hover:border-[#c1b6ad]'
+                    }`}
+                    onClick={() => setSelectedColor(color)}
+                  >
                     {color}
                   </button>
                 ))}
               </div>
 
-              <button className="w-full py-3 bg-[#c1b6ad] text-white mb-8">Добавить в корзину</button>
+              <button
+                className="w-full py-3 bg-[#c1b6ad] text-white mb-8 disabled:opacity-50"
+                onClick={handleAddToCart}
+                disabled={isAddingToCart || !selectedSize || !selectedColor}
+              >
+                {isAddingToCart ? 'Добавление...' : 'Добавить в корзину'}
+              </button>
 
               <div className="border-t border-gray-100 pt-6">
                 <p className="mb-4">{product.description}</p>

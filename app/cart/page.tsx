@@ -1,33 +1,80 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Trash2 } from "lucide-react"
 import { Header } from "@/components/header"
+import { useEffect, useState } from "react"
+import { use } from "react"
 
-// Mock data for cart items
-const cartItems = [
-  {
-    id: "1",
-    name: "Пижама из хлопка",
-    size: "M",
-    color: "Белый",
-    price: 3990,
-    quantity: 1,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: "2",
-    name: "Халат льняной",
-    size: "L",
-    color: "Бежевый",
-    price: 4990,
-    quantity: 1,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-]
+type CartItem = {
+  id: string
+  product: {
+    id: string
+    name: string
+    price: number
+    image: string
+  }
+  size: string
+  color: string
+  quantity: number
+}
 
 export default function Cart() {
-  // Calculate total
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await fetch('/api/cart')
+        if (!response.ok) throw new Error('Failed to fetch cart')
+        const data = await response.json()
+        setCartItems(data)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCart()
+  }, [])
+
+  const handleQuantityChange = async (itemId: string, newQuantity: number) => {
+    try {
+      const response = await fetch(`/api/cart/${itemId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: newQuantity }),
+      })
+      if (!response.ok) throw new Error('Failed to update quantity')
+      const updatedItem = await response.json()
+      setCartItems(items => items.map(item => 
+        item.id === itemId ? updatedItem : item
+      ))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    }
+  }
+
+  const handleRemoveItem = async (itemId: string) => {
+    try {
+      const response = await fetch(`/api/cart/${itemId}`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) throw new Error('Failed to remove item')
+      setCartItems(items => items.filter(item => item.id !== itemId))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    }
+  }
+
+  if (loading) return <div>Загрузка...</div>
+  if (error) return <div>Ошибка: {error}</div>
+
+  const total = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
 
   return (
     <main className="min-h-screen bg-white text-[#333] font-['Inter',sans-serif]">
@@ -55,25 +102,36 @@ export default function Cart() {
                     <td className="py-4">
                       <div className="flex items-center">
                         <div className="w-16 h-16 relative mr-4">
-                          <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
+                          <Image src={item.product.image || "/placeholder.svg"} alt={item.product.name} fill className="object-cover" />
                         </div>
-                        <span>{item.name}</span>
+                        <span>{item.product.name}</span>
                       </div>
                     </td>
                     <td className="py-4">
                       {item.size}, {item.color}
                     </td>
-                    <td className="py-4">{item.price} ₴</td>
+                    <td className="py-4">{item.product.price} ₴</td>
                     <td className="py-4">
                       <div className="flex items-center">
-                        <button className="w-8 h-8 border border-gray-200 flex items-center justify-center">-</button>
+                        <button 
+                          className="w-8 h-8 border border-gray-200 flex items-center justify-center"
+                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                        >
+                          -
+                        </button>
                         <span className="w-8 h-8 flex items-center justify-center">{item.quantity}</span>
-                        <button className="w-8 h-8 border border-gray-200 flex items-center justify-center">+</button>
+                        <button 
+                          className="w-8 h-8 border border-gray-200 flex items-center justify-center"
+                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                        >
+                          +
+                        </button>
                       </div>
                     </td>
-                    <td className="py-4">{item.price * item.quantity} ₴</td>
+                    <td className="py-4">{item.product.price * item.quantity} ₴</td>
                     <td className="py-4">
-                      <button>
+                      <button onClick={() => handleRemoveItem(item.id)}>
                         <Trash2 className="w-5 h-5 text-gray-400 hover:text-[#333]" />
                       </button>
                     </td>
