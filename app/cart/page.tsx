@@ -5,7 +5,6 @@ import Image from "next/image"
 import { Trash2 } from "lucide-react"
 import { Header } from "@/components/header"
 import { useEffect, useState } from "react"
-import { use } from "react"
 
 type CartItem = {
   id: string
@@ -44,16 +43,14 @@ export default function Cart() {
 
   const handleQuantityChange = async (itemId: string, newQuantity: number) => {
     try {
-      const response = await fetch(`/api/cart/${itemId}`, {
+      const response = await fetch(`/api/cart`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity: newQuantity }),
+        body: JSON.stringify({ itemId, quantity: newQuantity }),
       })
       if (!response.ok) throw new Error('Failed to update quantity')
-      const updatedItem = await response.json()
-      setCartItems(items => items.map(item => 
-        item.id === itemId ? updatedItem : item
-      ))
+      const data = await response.json()
+      setCartItems(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     }
@@ -61,11 +58,14 @@ export default function Cart() {
 
   const handleRemoveItem = async (itemId: string) => {
     try {
-      const response = await fetch(`/api/cart/${itemId}`, {
+      const response = await fetch(`/api/cart`, {
         method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId }),
       })
       if (!response.ok) throw new Error('Failed to remove item')
-      setCartItems(items => items.filter(item => item.id !== itemId))
+      const data = await response.json()
+      setCartItems(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     }

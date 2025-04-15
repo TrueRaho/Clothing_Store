@@ -4,11 +4,13 @@ import Link from "next/link"
 import { Search, ShoppingBag, User, LogOut, ChevronDown } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useState, useRef, useEffect } from "react"
+import { useCart } from "@/lib/hooks/use-cart"
 
 export function Header() {
   const { user, logout, isAuthenticated } = useAuth()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const { totalItems } = useCart()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -91,9 +93,11 @@ export function Header() {
 
           <Link href="/cart" className="relative">
             <ShoppingBag className="w-5 h-5 text-gray-800" />
-            <span className="absolute -top-1 -right-1 bg-[#c1b6ad] text-white text-xs w-4 h-4 flex items-center justify-center">
-              0
-            </span>
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[#c1b6ad] text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                {totalItems}
+              </span>
+            )}
           </Link>
         </div>
       </div>
