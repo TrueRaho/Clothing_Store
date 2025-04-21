@@ -1,33 +1,59 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Trash2 } from "lucide-react"
 import { Header } from "@/components/header"
-
-// Mock data for cart items
-const cartItems = [
-  {
-    id: "1",
-    name: "Пижама из хлопка",
-    size: "M",
-    color: "Белый",
-    price: 3990,
-    quantity: 1,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: "2",
-    name: "Халат льняной",
-    size: "L",
-    color: "Бежевый",
-    price: 4990,
-    quantity: 1,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-]
+import { CartItem } from "../lib/cart"
 
 export default function Cart() {
-  // Calculate total
+  // Состояние для элементов корзины
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Загрузка корзины из localStorage при монтировании компонента
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart")
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart))
+    }
+    setIsLoading(false)
+  }, [])
+
+  // Сохранение корзины в localStorage при изменении
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem("cart", JSON.stringify(cartItems))
+    }
+  }, [cartItems, isLoading])
+
+  // Функция изменения количества товара
+  const updateQuantity = (id: string, size: string, color: string, change: number) => {
+    setCartItems(prevItems => 
+      prevItems.map(item => {
+        if (item.id === id && item.size === size && item.color === color) {
+          const newQuantity = Math.max(1, item.quantity + change)
+          return { ...item, quantity: newQuantity }
+        }
+        return item
+      })
+    )
+  }
+
+  // Функция удаления товара
+  const removeItem = (id: string, size: string, color: string) => {
+    setCartItems(prevItems => prevItems.filter(item => 
+      !(item.id === id && item.size === size && item.color === color)
+    ))
+  }
+
+  // Расчет общей суммы
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center min-h-screen">Загрузка...</div>
+  }
 
   return (
     <main className="min-h-screen bg-white text-[#333] font-['Inter',sans-serif]">
@@ -51,7 +77,7 @@ export default function Cart() {
               </thead>
               <tbody>
                 {cartItems.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-100">
+                  <tr key={`${item.id}-${item.size}-${item.color}`} className="border-b border-gray-100">
                     <td className="py-4">
                       <div className="flex items-center">
                         <div className="w-16 h-16 relative mr-4">
@@ -66,14 +92,24 @@ export default function Cart() {
                     <td className="py-4">{item.price} ₽</td>
                     <td className="py-4">
                       <div className="flex items-center">
-                        <button className="w-8 h-8 border border-gray-200 flex items-center justify-center">-</button>
+                        <button 
+                          className="w-8 h-8 border border-gray-200 flex items-center justify-center"
+                          onClick={() => updateQuantity(item.id, item.size, item.color, -1)}
+                        >
+                          -
+                        </button>
                         <span className="w-8 h-8 flex items-center justify-center">{item.quantity}</span>
-                        <button className="w-8 h-8 border border-gray-200 flex items-center justify-center">+</button>
+                        <button 
+                          className="w-8 h-8 border border-gray-200 flex items-center justify-center"
+                          onClick={() => updateQuantity(item.id, item.size, item.color, 1)}
+                        >
+                          +
+                        </button>
                       </div>
                     </td>
                     <td className="py-4">{item.price * item.quantity} ₽</td>
                     <td className="py-4">
-                      <button>
+                      <button onClick={() => removeItem(item.id, item.size, item.color)}>
                         <Trash2 className="w-5 h-5 text-gray-400 hover:text-[#333]" />
                       </button>
                     </td>

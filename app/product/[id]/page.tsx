@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useEffect, useState, use } from "react"
 import { Header } from "@/components/header"
 import { ProductCard } from "@/components/product-card"
+import AddToCartButton from "../../components/AddToCartButton"
 
 type Product = {
   id: string
@@ -56,14 +57,6 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
     fetchData()
   }, [resolvedParams.id])
-
-  const handleAddToCart = () => {
-    if (!selectedSize || !selectedColor) {
-      alert("Пожалуйста, выберите размер и цвет")
-      return
-    }
-    alert("Товар добавлен в корзину")
-  }
 
   if (loading) return <div>Загрузка...</div>
   if (error) return <div>Ошибка: {error}</div>
@@ -137,12 +130,17 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
               </div>
             </div>
 
-            <button
-              onClick={handleAddToCart}
-              className="w-full py-3 bg-[#c1b6ad] text-white hover:bg-[#a89e96] transition-colors"
-            >
-              Добавить в корзину
-            </button>
+            <AddToCartButton 
+              product={{
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image
+              }}
+              selectedSize={selectedSize}
+              selectedColor={selectedColor}
+              className="w-full"
+            />
 
             <div className="mt-8">
               <h2 className="text-xl mb-2">Описание</h2>
