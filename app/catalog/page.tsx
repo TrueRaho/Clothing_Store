@@ -23,6 +23,7 @@ function CatalogContent() {
   const [loading, setLoading] = useState(true)
   const [allSizes, setAllSizes] = useState<string[]>([])
   const [allColors, setAllColors] = useState<string[]>([])
+  const [allCategories, setAllCategories] = useState<string[]>([])
   const [allCompositions, setAllCompositions] = useState<string[]>([])
 
   useEffect(() => {
@@ -36,10 +37,12 @@ function CatalogContent() {
         // Получаем уникальные значения для фильтров
         const sizes = Array.from(new Set(data.flatMap((p: Product) => p.sizes)))
         const colors = Array.from(new Set(data.flatMap((p: Product) => p.colors)))
+        const categories = Array.from(new Set(data.map((p: Product) => p.category)))
         const compositions = Array.from(new Set(data.map((p: Product) => p.composition)))
         
         setAllSizes(sizes)
         setAllColors(colors)
+        setAllCategories(categories)
         setAllCompositions(compositions)
       } catch (error) {
         console.error('Error fetching products:', error)
@@ -82,9 +85,9 @@ function CatalogContent() {
                 onChange={(e) => handleFilterChange('category', e.target.value)}
               >
                 <option value="">Все категории</option>
-                <option value="pajamas">Пижамы</option>
-                <option value="robes">Халаты</option>
-                <option value="suits">Костюмы</option>
+                {allCategories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
               </select>
             </div>
 
