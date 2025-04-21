@@ -21,7 +21,6 @@ function CatalogContent() {
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [allSizes, setAllSizes] = useState<string[]>([])
   const [allColors, setAllColors] = useState<string[]>([])
   const [allCompositions, setAllCompositions] = useState<string[]>([])
@@ -29,34 +28,21 @@ function CatalogContent() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true)
-        setError(null)
         const params = new URLSearchParams(searchParams.toString())
         const response = await fetch(`/api/products?${params.toString()}`)
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        
-        const data = await response.json()
-        
-        if (!Array.isArray(data)) {
-          throw new Error('Received data is not an array')
-        }
-        
+        const data = await response.json() as Product[]
         setProducts(data)
         
         // Получаем уникальные значения для фильтров
-        const sizes = Array.from(new Set(data.flatMap((p: Product) => p.sizes || [])))
-        const colors = Array.from(new Set(data.flatMap((p: Product) => p.colors || [])))
-        const compositions = Array.from(new Set(data.map((p: Product) => p.composition || '').filter(Boolean)))
+        const sizes = Array.from(new Set(data.flatMap((p: Product) => p.sizes)))
+        const colors = Array.from(new Set(data.flatMap((p: Product) => p.colors)))
+        const compositions = Array.from(new Set(data.map((p: Product) => p.composition)))
         
         setAllSizes(sizes)
         setAllColors(colors)
         setAllCompositions(compositions)
       } catch (error) {
         console.error('Error fetching products:', error)
-        setError(error instanceof Error ? error.message : 'Произошла ошибка при загрузке товаров')
       } finally {
         setLoading(false)
       }
@@ -76,11 +62,7 @@ function CatalogContent() {
   }
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Загрузка...</div>
-  }
-
-  if (error) {
-    return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>
+    return <div>Загрузка...</div>
   }
 
   return (
@@ -179,8 +161,6 @@ function CatalogContent() {
               name={product.name}
               price={product.price}
               image={product.image}
-              sizes={product.sizes}
-              colors={product.colors}
             />
           ))}
         </div>
@@ -191,8 +171,9 @@ function CatalogContent() {
 
 export default function Catalog() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Загрузка...</div>}>
+    <Suspense fallback={<div>Загрузка...</div>}>
       <CatalogContent />
     </Suspense>
   )
 }
+
