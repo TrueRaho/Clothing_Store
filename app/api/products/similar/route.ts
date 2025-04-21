@@ -6,17 +6,31 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const currentProductId = searchParams.get('currentProductId')
     
-    const products = await prisma.product.findMany({
+    if (!currentProductId) {
+      return NextResponse.json(
+        { error: 'Current product ID is required' },
+        { status: 400 }
+      )
+    }
+
+    const similarProducts = await prisma.product.findMany({
       where: {
         NOT: {
-          id: currentProductId || undefined
+          id: currentProductId
         }
       },
-      take: 3
+      take: 4,
+      orderBy: {
+        id: 'asc'
+      }
     })
 
-    return NextResponse.json(products)
+    return NextResponse.json(similarProducts)
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to get similar products' }, { status: 400 })
+    console.error('Error fetching similar products:', error)
+    return NextResponse.json(
+      { error: 'Failed to fetch similar products' },
+      { status: 500 }
+    )
   }
 } 

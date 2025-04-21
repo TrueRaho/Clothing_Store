@@ -3,16 +3,17 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
+    const params = await context.params
     const product = await prisma.product.findUnique({
       where: { id: params.id }
     })
 
     if (!product) {
       return NextResponse.json(
-        { error: 'Товар не найден' },
+        { error: 'Product not found' },
         { status: 404 }
       )
     }
@@ -21,7 +22,7 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching product:', error)
     return NextResponse.json(
-      { error: 'Ошибка при получении товара' },
+      { error: 'Failed to fetch product' },
       { status: 500 }
     )
   }
