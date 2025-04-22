@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useEffect, useState, use } from "react"
 import { Header } from "@/components/header"
 import { ProductCard } from "@/components/product-card"
-import AddToCartButton from "../../components/AddToCartButton"
+import AddToCartButton from "@/components/AddToCartButton"
 
 type Product = {
   id: string
@@ -39,17 +39,17 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
       try {
         // Fetch product data
         const productResponse = await fetch(`/api/products/${resolvedParams.id}`)
-        if (!productResponse.ok) throw new Error('Failed to fetch product')
+        if (!productResponse.ok) throw new Error('Не вдалося отримати товар')
         const productData = await productResponse.json()
         setProduct(productData)
 
         // Fetch similar products
         const similarResponse = await fetch(`/api/products/similar?currentProductId=${resolvedParams.id}`)
-        if (!similarResponse.ok) throw new Error('Failed to fetch similar products')
+        if (!similarResponse.ok) throw new Error('Не вдалося знайти схожі товари')
         const similarData = await similarResponse.json()
         setSimilarProducts(similarData)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred')
+        setError(err instanceof Error ? err.message : 'Виникла помилка')
       } finally {
         setLoading(false)
       }
@@ -58,9 +58,9 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     fetchData()
   }, [resolvedParams.id])
 
-  if (loading) return <div>Загрузка...</div>
-  if (error) return <div>Ошибка: {error}</div>
-  if (!product) return <div>Товар не найден</div>
+  if (loading) return <div>Завантаження...</div>
+  if (error) return <div>Помилка: {error}</div>
+  if (!product) return <div>Товар не знайдено</div>
 
   return (
     <div className="min-h-screen bg-white text-[#333] font-['Inter',sans-serif]">
@@ -81,7 +81,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             <p className="text-2xl mb-6">{product.price} ₴</p>
             
             <div className="mb-6">
-              <h2 className="text-xl mb-4">Размер</h2>
+              <h2 className="text-xl mb-4">Розмір</h2>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map(size => (
                   <label key={size} className="relative">
@@ -106,7 +106,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             </div>
 
             <div className="mb-6">
-              <h2 className="text-xl mb-4">Цвет</h2>
+              <h2 className="text-xl mb-4">Колір</h2>
               <div className="flex flex-wrap gap-2">
                 {product.colors.map(color => (
                   <label key={color} className="relative">
@@ -143,22 +143,22 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             />
 
             <div className="mt-8">
-              <h2 className="text-xl mb-2">Описание</h2>
+              <h2 className="text-xl mb-2">Опис</h2>
               <p>{product.description}</p>
             </div>
             <div className="mt-6">
-              <h2 className="text-xl mb-2">Состав</h2>
+              <h2 className="text-xl mb-2">Склад</h2>
               <p>{product.composition}</p>
             </div>
             <div className="mt-6">
-              <h2 className="text-xl mb-2">Уход</h2>
+              <h2 className="text-xl mb-2">Догляд</h2>
               <p>{product.care}</p>
             </div>
           </div>
         </div>
         {similarProducts.length > 0 && (
           <div className="mt-16">
-            <h2 className="text-2xl mb-8">Похожие товары</h2>
+            <h2 className="text-2xl mb-8">Схожі товари</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {similarProducts.map(product => (
                 <ProductCard

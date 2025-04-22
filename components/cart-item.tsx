@@ -3,37 +3,22 @@
 import Image from 'next/image'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { CartItem as CartItemType } from '@/lib/cart'
 
 interface CartItemProps {
-  item: {
-    id: string
-    product: {
-      id: string
-      name: string
-      price: number
-      image: string
-    }
-    size: string
-    color: string
-    quantity: number
-  }
+  item: CartItemType
+  onUpdateQuantity: (id: string, size: string, color: string, quantity: number) => void
+  onRemove: (id: string, size: string, color: string) => void
 }
 
-export function CartItem({ item }: CartItemProps) {
-  const [quantity, setQuantity] = useState(item.quantity)
+export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
   const [isUpdating, setIsUpdating] = useState(false)
 
   const handleQuantityChange = async (newQuantity: number) => {
     if (newQuantity < 1) return
     setIsUpdating(true)
     try {
-      const response = await fetch('/api/cart', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: item.id, quantity: newQuantity }),
-      })
-      if (!response.ok) throw new Error('Failed to update quantity')
-      setQuantity(newQuantity)
+      await onUpdateQuantity(item.id, item.size, item.color, newQuantity)
     } catch (error) {
       console.error('Error updating quantity:', error)
     } finally {
@@ -43,13 +28,7 @@ export function CartItem({ item }: CartItemProps) {
 
   const handleRemove = async () => {
     try {
-      const response = await fetch('/api/cart', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: item.id }),
-      })
-      if (!response.ok) throw new Error('Failed to remove item')
-      window.location.reload()
+      await onRemove(item.id, item.size, item.color)
     } catch (error) {
       console.error('Error removing item:', error)
     }
@@ -60,35 +39,35 @@ export function CartItem({ item }: CartItemProps) {
       <div className="flex items-center space-x-4">
         <div className="w-20 h-20 relative">
           <Image
-            src={item.product.image || "/placeholder.svg"}
-            alt={item.product.name}
+            src={item.image || "/placeholder.svg"}
+            alt={item.name}
             fill
             className="object-cover"
           />
         </div>
         <div>
-          <h3 className="font-medium">{item.product.name}</h3>
+          <h3 className="font-medium">{item.name}</h3>
           <p className="text-sm text-gray-500">
             {item.size}, {item.color}
           </p>
-          <p className="text-sm">{item.product.price} ₴</p>
+          <p className="text-sm">{item.price} ₽</p>
         </div>
       </div>
       <div className="flex items-center space-x-4">
         <div className="flex items-center border">
           <button
             className="w-8 h-8 flex items-center justify-center disabled:opacity-50"
-            onClick={() => handleQuantityChange(quantity - 1)}
-            disabled={isUpdating || quantity <= 1}
+            onClick={() => handleQuantityChange(item.quantity - 1)}
+            disabled={isUpdating || item.quantity <= 1}
           >
             -
           </button>
           <span className="w-8 h-8 flex items-center justify-center">
-            {quantity}
+            {item.quantity}
           </span>
           <button
             className="w-8 h-8 flex items-center justify-center disabled:opacity-50"
-            onClick={() => handleQuantityChange(quantity + 1)}
+            onClick={() => handleQuantityChange(item.quantity + 1)}
             disabled={isUpdating}
           >
             +

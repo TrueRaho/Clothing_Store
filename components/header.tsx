@@ -5,7 +5,7 @@ import { Search, User, LogOut, ChevronDown } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import CartIndicator from "../app/components/CartIndicator"
+import CartIndicator from "./CartIndicator"
 
 export function Header() {
   const { user, logout, isAuthenticated } = useAuth()
@@ -75,7 +75,7 @@ export function Header() {
             О нас
           </Link>
           <Link href="/contacts" className="text-gray-800 hover:text-[#c1b6ad]">
-            Контакты
+            Контакти
           </Link>
         </nav>
 
@@ -131,7 +131,7 @@ export function Header() {
                     onClick={logout}
                   >
                     <LogOut className="w-4 h-4 mr-2" />
-                    Выйти
+                    Вийти
                   </button>
                 </div>
               )}
@@ -139,7 +139,7 @@ export function Header() {
           ) : (
             <Link href="/login" className="text-gray-800 hover:text-[#c1b6ad] flex items-center">
               <User className="w-4 h-4 mr-1" />
-              Войти
+              Увійти
             </Link>
           )}
 

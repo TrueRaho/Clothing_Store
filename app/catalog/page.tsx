@@ -65,7 +65,7 @@ function CatalogContent() {
   }
 
   if (loading) {
-    return <div>Загрузка...</div>
+    return <div>Завантаження...</div>
   }
 
   return (
@@ -78,13 +78,13 @@ function CatalogContent() {
         <div className="border-y border-gray-100 py-4 mb-8">
           <div className="flex items-center space-x-8">
             <div>
-              <label className="block mb-1 text-sm">Категория</label>
+              <label className="block mb-1 text-sm">Категорія</label>
               <select 
                 className="border border-gray-200 p-1 w-32"
                 value={searchParams.get('category') || ''}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
               >
-                <option value="">Все категории</option>
+                <option value="">Всі категорії</option>
                 {allCategories.map(category => (
                   <option key={category} value={category}>{category}</option>
                 ))}
@@ -92,13 +92,13 @@ function CatalogContent() {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm">Размер</label>
+              <label className="block mb-1 text-sm">Розмір</label>
               <select 
                 className="border border-gray-200 p-1 w-32"
                 value={searchParams.get('size') || ''}
                 onChange={(e) => handleFilterChange('size', e.target.value)}
               >
-                <option value="">Все размеры</option>
+                <option value="">Всі розміри</option>
                 {allSizes.map(size => (
                   <option key={size} value={size}>{size}</option>
                 ))}
@@ -112,7 +112,7 @@ function CatalogContent() {
                 value={searchParams.get('color') || ''}
                 onChange={(e) => handleFilterChange('color', e.target.value)}
               >
-                <option value="">Все цвета</option>
+                <option value="">Всі кольори</option>
                 {allColors.map(color => (
                   <option key={color} value={color}>{color}</option>
                 ))}
@@ -120,13 +120,13 @@ function CatalogContent() {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm">Состав</label>
+              <label className="block mb-1 text-sm">Склад</label>
               <select 
                 className="border border-gray-200 p-1 w-32"
                 value={searchParams.get('composition') || ''}
                 onChange={(e) => handleFilterChange('composition', e.target.value)}
               >
-                <option value="">Любой состав</option>
+                <option value="">Любий склад</option>
                 {allCompositions.map(composition => (
                   <option key={composition} value={composition}>{composition}</option>
                 ))}
@@ -134,11 +134,11 @@ function CatalogContent() {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm">Цена</label>
+              <label className="block mb-1 text-sm">Ціна</label>
               <div className="flex items-center space-x-2">
                 <input 
                   type="number" 
-                  placeholder="от" 
+                  placeholder="від" 
                   className="border border-gray-200 p-1 w-20"
                   value={searchParams.get('minPrice') || ''}
                   onChange={(e) => handleFilterChange('minPrice', e.target.value)}
@@ -174,7 +174,7 @@ function CatalogContent() {
 
 export default function Catalog() {
   return (
-    <Suspense fallback={<div>Загрузка...</div>}>
+    <Suspense fallback={<div>Завантаження...</div>}>
       <CatalogContent />
     </Suspense>
   )

@@ -20,7 +20,7 @@ export default function Login() {
     setError("")
 
     if (!email || !password) {
-      setError("Пожалуйста, заполните все поля")
+      setError("Будь ласка, заповніть усі поля")
       return
     }
 
@@ -28,7 +28,7 @@ export default function Login() {
     if (success) {
       router.push("/")
     } else {
-      setError("Неверный email или пароль")
+      setError("Невірний email або пароль")
     }
   }
 
@@ -38,7 +38,7 @@ export default function Login() {
 
       <div className="container mx-auto py-12">
         <div className="max-w-md mx-auto">
-          <h1 className="text-2xl mb-8 text-center">Вход в аккаунт</h1>
+          <h1 className="text-2xl mb-8 text-center">Вхід до акаунту</h1>
 
           <form onSubmit={handleLogin} className="space-y-6">
             {error && (
@@ -76,15 +76,15 @@ export default function Login() {
             </div>
 
             <button type="submit" className="w-full py-3 bg-[#c1b6ad] text-white">
-              Войти
+            Увійти
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p>
-              Нет аккаунта?{" "}
+            Немає акаунта?{" "}
               <Link href="/register" className="text-[#c1b6ad] hover:underline">
-                Зарегистрироваться
+              Зареєструватися
               </Link>
             </p>
           </div>

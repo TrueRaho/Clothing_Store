@@ -7,7 +7,7 @@ export default function Contacts() {
       <Header />
 
       <div className="container mx-auto py-12">
-        <h1 className="text-2xl mb-8">Контакты</h1>
+        <h1 className="text-2xl mb-8">Контакти</h1>
 
         <div className="grid md:grid-cols-2 gap-12">
           <div>
@@ -16,7 +16,7 @@ export default function Contacts() {
                 <Phone className="w-5 h-5 mr-4 mt-1" />
                 <div>
                   <h3 className="font-medium mb-1">Телефон</h3>
-                  <p>+(421)123-456-789</p>
+                  <p>+(380)67-123-45-67</p>
                   <p className="text-sm text-gray-500 mt-1">Пн-Пт с 10:00 до 19:00</p>
                 </div>
               </div>
@@ -25,26 +25,26 @@ export default function Contacts() {
                 <Mail className="w-5 h-5 mr-4 mt-1" />
                 <div>
                   <h3 className="font-medium mb-1">Email</h3>
-                  <p>info@dom-odezhda.ru</p>
-                  <p className="text-sm text-gray-500 mt-1">Мы отвечаем в течение 24 часов</p>
+                  <p>info@dom-odezhda.ua</p>
+                  <p className="text-sm text-gray-500 mt-1">Ми відповідаємо протягом 24 годин</p>
                 </div>
               </div>
 
               <div className="flex items-start">
                 <MapPin className="w-5 h-5 mr-4 mt-1" />
                 <div>
-                  <h3 className="font-medium mb-1">Адрес шоурума</h3>
-                  <p>г. Пушкина, ул. Колотушкина, д. 5</p>
-                  <p className="text-sm text-gray-500 mt-1">Пн-Вс с 12:00 до 20:00</p>
+                  <h3 className="font-medium mb-1">Адреса шоуруму</h3>
+                  <p>г. Києва, вул. Колотушкина, д. 5</p>
+                  <p className="text-sm text-gray-500 mt-1">Пн-Вс з 12:00 до 20:00</p>
                 </div>
               </div>
             </div>
 
             <div className="mt-12">
-              <h2 className="text-xl mb-6">Напишите нам</h2>
+              <h2 className="text-xl mb-6">Напишіть нам</h2>
               <form className="grid gap-4">
                 <div>
-                  <label className="block mb-2">Имя</label>
+                  <label className="block mb-2">Ім'я</label>
                   <input
                     type="text"
                     className="w-full border border-gray-200 p-2 focus:outline-none focus:border-[#c1b6ad]"
@@ -62,7 +62,7 @@ export default function Contacts() {
                 </div>
 
                 <div>
-                  <label className="block mb-2">Сообщение</label>
+                  <label className="block mb-2">Повідомлення</label>
                   <textarea
                     className="w-full border border-gray-200 p-2 h-32 focus:outline-none focus:border-[#c1b6ad]"
                     required
@@ -70,7 +70,7 @@ export default function Contacts() {
                 </div>
 
                 <button type="submit" className="px-8 py-3 bg-[#c1b6ad] text-white mt-2 w-fit">
-                  Отправить
+                  Відправити
                 </button>
               </form>
             </div>

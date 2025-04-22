@@ -7,8 +7,8 @@ import { AuthProvider } from "@/contexts/auth-context"
 const inter = Inter({ subsets: ["latin", "cyrillic"] })
 
 export const metadata: Metadata = {
-  title: "Затишок & Стиль - Минималистичная одежда для дома",
-  description: "Интернет-магазин домашней одежды без логотипов и лишнего",
+  title: "Затишок & Стиль - Мінімалістичний одяг для дому",
+  description: "Інтернет-магазин домашнього одягу без логотипів та зайвого",
 }
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ru">
+    <html lang="ua">
       <body className={inter.className}>
         <AuthProvider>{children}</AuthProvider>
       </body>

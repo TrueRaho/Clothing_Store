@@ -21,7 +21,7 @@ export default function Register() {
     setError("")
 
     if (!name || !email || !password) {
-      setError("Пожалуйста, заполните все поля")
+      setError("Будь ласка, заповніть усі поля")
       return
     }
 
@@ -29,7 +29,7 @@ export default function Register() {
     if (success) {
       router.push("/")
     } else {
-      setError("Ошибка при регистрации. Возможно, email уже используется.")
+      setError("Помилка під час реєстрації. Можливо, email уже використовується.")
     }
   }
 
@@ -39,7 +39,7 @@ export default function Register() {
 
       <div className="container mx-auto py-12">
         <div className="max-w-md mx-auto">
-          <h1 className="text-2xl mb-8 text-center">Регистрация</h1>
+          <h1 className="text-2xl mb-8 text-center">Реєстрація</h1>
 
           <form onSubmit={handleRegister} className="space-y-6">
             {error && (
@@ -50,7 +50,7 @@ export default function Register() {
 
             <div>
               <label htmlFor="name" className="block mb-2">
-                Имя
+                Ім'я
               </label>
               <input
                 id="name"
@@ -92,15 +92,15 @@ export default function Register() {
             </div>
 
             <button type="submit" className="w-full py-3 bg-[#c1b6ad] text-white">
-              Зарегистрироваться
+            Зареєструватися
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p>
-              Уже есть аккаунт?{" "}
+            Вже є акаунт?{" "}
               <Link href="/login" className="text-[#c1b6ad] hover:underline">
-                Войти
+                Увійти
               </Link>
             </p>
           </div>

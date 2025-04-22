@@ -12,18 +12,18 @@ export default function Home() {
           <div className="aspect-[3/2] relative mb-8">
             <Image
               src="/placeholder.svg?height=800&width=1200"
-              alt="Человек в домашней одежде"
+              alt="Людина в домашньому одязі"
               fill
               className="object-cover"
               priority
             />
           </div>
-          <h1 className="text-3xl mb-4">Дом. Ты. И ничего лишнего.</h1>
+          <h1 className="text-3xl mb-4">Дім. Ти. І нічого зайвого.</h1>
           <Link
             href="/catalog"
             className="inline-block px-8 py-3 bg-[#c1b6ad] text-white"
           >
-            Перейти в каталог
+            Перейти до каталогу
           </Link>
         </div>
       </section>
@@ -34,36 +34,36 @@ export default function Home() {
             <div className="aspect-square relative mb-3 bg-gray-50">
               <Image
                 src="/placeholder.svg?height=400&width=400"
-                alt="Пижамы"
+                alt="Піжами"
                 fill
                 className="object-cover"
               />
             </div>
-            <h2 className="text-xl text-center">Пижамы</h2>
+            <h2 className="text-xl text-center">Піжами</h2>
           </Link>
 
           <Link href="/catalog?category=robes" className="block">
             <div className="aspect-square relative mb-3 bg-gray-50">
               <Image
                 src="/placeholder.svg?height=400&width=400"
-                alt="Халаты"
+                alt="Халати"
                 fill
                 className="object-cover"
               />
             </div>
-            <h2 className="text-xl text-center">Халаты</h2>
+            <h2 className="text-xl text-center">Халати</h2>
           </Link>
 
           <Link href="/catalog?category=suits" className="block">
             <div className="aspect-square relative mb-3 bg-gray-50">
               <Image
                 src="/placeholder.svg?height=400&width=400"
-                alt="Костюмы"
+                alt="Костюми"
                 fill
                 className="object-cover"
               />
             </div>
-            <h2 className="text-xl text-center">Костюмы</h2>
+            <h2 className="text-xl text-center">Костюми</h2>
           </Link>
         </div>
       </section>

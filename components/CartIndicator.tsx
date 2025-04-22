@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ShoppingBag } from "lucide-react"
-import { getCartItemsCount } from "../lib/cart"
+import { getCartItemsCount } from "@/lib/cart"
 
 export default function CartIndicator() {
   const [itemsCount, setItemsCount] = useState(0)
