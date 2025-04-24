@@ -75,7 +75,7 @@ export default function Cart() {
 
             <div className="flex justify-between items-center border-t border-gray-100 pt-6">
               <div>
-                <p className="text-xl">Итого: {total} ₽</p>
+                <p className="text-xl">Итого: {total} ₴</p>
               </div>
               <Link href="/checkout" className="px-8 py-3 bg-[#c1b6ad] text-white">
                 Оформить заказ

@@ -50,7 +50,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
           <p className="text-sm text-gray-500">
             {item.size}, {item.color}
           </p>
-          <p className="text-sm">{item.price} ₽</p>
+          <p className="text-sm">{item.price} ₴</p>
         </div>
       </div>
       <div className="flex items-center space-x-4">

@@ -1,6 +1,46 @@
 import { PrismaClient } from '../lib/generated/prisma'
+import sharp from 'sharp'
+import path from 'path'
+import fs from 'fs'
 
 const prisma = new PrismaClient()
+
+async function processImage(imagePath: string): Promise<string> {
+  const publicDir = path.join(process.cwd(), 'public')
+  const inputPath = path.join(publicDir, imagePath)
+  const outputPath = path.join(publicDir, 'processed', imagePath)
+
+  // Создаем директорию для обработанных изображений, если она не существует
+  const outputDir = path.dirname(outputPath)
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true })
+  }
+
+  // Получаем метаданные изображения
+  const metadata = await sharp(inputPath).metadata()
+  
+  if (!metadata.width || !metadata.height) {
+    throw new Error('Не вдалося отримати розміри зображення')
+  }
+
+  // Находим минимальный размер
+  const minSize = Math.min(metadata.width, metadata.height)
+  
+  // Вычисляем координаты для обрезки
+  const left = 0
+  const top = 0
+  const width = minSize
+  const height = minSize
+
+  // Обрабатываем изображение
+  await sharp(inputPath)
+    .extract({ left, top, width, height })
+    .resize(minSize, minSize)
+    .toFile(outputPath)
+
+  // Возвращаем путь к обработанному изображению
+  return `/processed${imagePath}`
+}
 
 async function main() {
   // Очищаем существующие данные
@@ -8,146 +48,152 @@ async function main() {
 
   // Добавляем товары
   const products = [
-    // Пижамы
+    // Піжами
     {
-      name: "Пижама 'Уют'",
+      name: "Піжама 'Затишок'",
       price: 1200,
-      description: "Мягкая пижама из хлопка",
-      composition: "100% хлопок",
-      care: "Стирка при 30°C",
-      image: "/placeholder.svg",
-      colors: ["белый", "серый"],
+      description: "М'яка піжама з бавовни",
+      composition: "100% бавовна",
+      care: "Прання при 30°C",
+      image: "/Pyjama1.webp",
+      colors: ["білий", "сірий"],
       sizes: ["S", "M", "L"],
       category: "pajamas"
     },
     {
-      name: "Пижама 'Мечта'",
+      name: "Піжама 'Мрія'",
       price: 1500,
-      description: "Шелковая пижама",
-      composition: "100% шелк",
-      care: "Ручная стирка",
-      image: "/placeholder.svg",
-      colors: ["бежевый", "черный"],
+      description: "Шовкова піжама",
+      composition: "100% шовк",
+      care: "Ручне прання",
+      image: "/Pyjama2.webp",
+      colors: ["бежевий", "чорний"],
       sizes: ["XS", "S", "M"],
       category: "pajamas"
     },
     {
-      name: "Пижама 'Комфорт'",
+      name: "Піжама 'Комфорт'",
       price: 1300,
-      description: "Фланелевая пижама",
-      composition: "100% хлопок",
-      care: "Стирка при 40°C",
-      image: "/placeholder.svg",
-      colors: ["красный", "синий"],
+      description: "Фланелева піжама",
+      composition: "100% бавовна",
+      care: "Прання при 40°C",
+      image: "/Pyjama3.webp",
+      colors: ["червоний", "синій"],
       sizes: ["M", "L", "XL"],
       category: "pajamas"
     },
     {
-      name: "Пижама 'Нежность'",
+      name: "Піжама 'Ніжність'",
       price: 1400,
-      description: "Шелковая пижама с кружевом",
-      composition: "100% шелк",
-      care: "Ручная стирка",
-      image: "/placeholder.svg",
-      colors: ["розовый", "белый"],
+      description: "Шовкова піжама з мереживом",
+      composition: "100% шовк",
+      care: "Ручне прання",
+      image: "/Pyjama4.webp",
+      colors: ["рожевий", "білий"],
       sizes: ["S", "M", "L"],
       category: "pajamas"
     },
-    // Халаты
+    // Халати
     {
       name: "Халат 'Комфорт'",
       price: 2500,
-      description: "Махровый халат",
-      composition: "100% хлопок",
-      care: "Стирка при 40°C",
-      image: "/placeholder.svg",
-      colors: ["белый", "голубой"],
+      description: "Махровий халат",
+      composition: "100% бавовна",
+      care: "Прання при 40°C",
+      image: "/Bathrobe1.webp",
+      colors: ["білий", "блакитний"],
       sizes: ["M", "L", "XL"],
       category: "robes"
     },
     {
-      name: "Халат 'Шелковый'",
+      name: "Халат 'Шовковий'",
       price: 3000,
-      description: "Шелковый халат",
-      composition: "100% шелк",
-      care: "Ручная стирка",
-      image: "/placeholder.svg",
-      colors: ["розовый", "черный"],
+      description: "Шовковий халат",
+      composition: "100% шовк",
+      care: "Ручне прання",
+      image: "/Bathrobe2.webp",
+      colors: ["рожевий", "чорний"],
       sizes: ["S", "M", "L"],
       category: "robes"
     },
     {
-      name: "Халат 'Уютный'",
+      name: "Халат 'Затишний'",
       price: 2800,
-      description: "Флисовый халат",
-      composition: "100% полиэстер",
-      care: "Стирка при 30°C",
-      image: "/placeholder.svg",
-      colors: ["серый", "бежевый"],
+      description: "Флісовий халат",
+      composition: "100% поліестер",
+      care: "Прання при 30°C",
+      image: "/Bathrobe3.webp",
+      colors: ["сірий", "бежевий"],
       sizes: ["S", "M", "L", "XL"],
       category: "robes"
     },
     {
-      name: "Халат 'Элегант'",
+      name: "Халат 'Елегант'",
       price: 3200,
-      description: "Шелковый халат с поясом",
-      composition: "100% шелк",
-      care: "Ручная стирка",
-      image: "/placeholder.svg",
-      colors: ["бордовый", "черный"],
+      description: "Шовковий халат з поясом",
+      composition: "100% шовк",
+      care: "Ручне прання",
+      image: "/Bathrobe4.webp",
+      colors: ["бордовий", "чорний"],
       sizes: ["M", "L"],
       category: "robes"
     },
-    // Костюмы
+    // Костюми
     {
-      name: "Костюм 'Домашний'",
+      name: "Костюм 'Домашній'",
       price: 2000,
-      description: "Трикотажный костюм",
-      composition: "100% хлопок",
-      care: "Стирка при 30°C",
-      image: "/placeholder.svg",
-      colors: ["серый", "черный"],
+      description: "Трикотажний костюм",
+      composition: "100% бавовна",
+      care: "Прання при 30°C",
+      image: "/Suit1.webp",
+      colors: ["сірий", "чорний"],
       sizes: ["S", "M", "L"],
       category: "suits"
     },
     {
-      name: "Костюм 'Спортивный'",
+      name: "Костюм 'Спортивний'",
       price: 1800,
-      description: "Спортивный костюм",
-      composition: "95% хлопок, 5% эластан",
-      care: "Стирка при 30°C",
-      image: "/placeholder.svg",
-      colors: ["синий", "черный"],
+      description: "Спортивний костюм",
+      composition: "95% бавовна, 5% еластан",
+      care: "Прання при 30°C",
+      image: "/Suit2.webp",
+      colors: ["синій", "чорний"],
       sizes: ["M", "L", "XL"],
       category: "suits"
     },
     {
-      name: "Костюм 'Классика'",
+      name: "Костюм 'Класика'",
       price: 2200,
-      description: "Классический домашний костюм",
-      composition: "100% хлопок",
-      care: "Стирка при 30°C",
-      image: "/placeholder.svg",
-      colors: ["бежевый", "белый"],
+      description: "Класичний домашній костюм",
+      composition: "100% бавовна",
+      care: "Прання при 30°C",
+      image: "/Suit3.webp",
+      colors: ["бежевий", "білий"],
       sizes: ["S", "M", "L"],
       category: "suits"
     },
     {
-      name: "Костюм 'Уют'",
+      name: "Костюм 'Затишок'",
       price: 1900,
-      description: "Мягкий домашний костюм",
-      composition: "100% хлопок",
-      care: "Стирка при 30°C",
-      image: "/placeholder.svg",
-      colors: ["розовый", "серый"],
+      description: "М'який домашній костюм",
+      composition: "100% бавовна",
+      care: "Прання при 30°C",
+      image: "/Suit4.webp",
+      colors: ["рожевий", "сірий"],
       sizes: ["XS", "S", "M"],
       category: "suits"
     }
   ]
 
   for (const product of products) {
+    // Обрабатываем изображение перед созданием продукта
+    const processedImagePath = await processImage(product.image)
+    
     await prisma.product.create({
-      data: product
+      data: {
+        ...product,
+        image: processedImagePath
+      }
     })
   }
 }

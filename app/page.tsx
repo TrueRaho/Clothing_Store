@@ -11,7 +11,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="aspect-[3/2] relative mb-8">
             <Image
-              src="/placeholder.svg?height=800&width=1200"
+              src="/image.png"
               alt="Людина в домашньому одязі"
               fill
               className="object-cover"
@@ -33,7 +33,7 @@ export default function Home() {
           <Link href="/catalog?category=pajamas" className="block">
             <div className="aspect-square relative mb-3 bg-gray-50">
               <Image
-                src="/placeholder.svg?height=400&width=400"
+                src="/processed/Pyjama4.webp"
                 alt="Піжами"
                 fill
                 className="object-cover"
@@ -45,7 +45,7 @@ export default function Home() {
           <Link href="/catalog?category=robes" className="block">
             <div className="aspect-square relative mb-3 bg-gray-50">
               <Image
-                src="/placeholder.svg?height=400&width=400"
+                src="/processed/Bathrobe1.webp"
                 alt="Халати"
                 fill
                 className="object-cover"
@@ -57,7 +57,7 @@ export default function Home() {
           <Link href="/catalog?category=suits" className="block">
             <div className="aspect-square relative mb-3 bg-gray-50">
               <Image
-                src="/placeholder.svg?height=400&width=400"
+                src="/processed/Suit4.webp"
                 alt="Костюми"
                 fill
                 className="object-cover"
