@@ -78,13 +78,13 @@ export default function Cart() {
                 <p className="text-xl">Итого: {total} ₴</p>
               </div>
               <Link href="/checkout" className="px-8 py-3 bg-[#c1b6ad] text-white">
-                Оформить заказ
+              Оформити замовлення
               </Link>
             </div>
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="mb-6">Ваша корзина пуста</p>
+            <p className="mb-6">Ваш кошик порожній</p>
             <Link href="/catalog" className="px-8 py-3 bg-[#c1b6ad] text-white">
               Перейти в каталог
             </Link>

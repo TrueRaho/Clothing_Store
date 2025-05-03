@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Search, User, LogOut, ChevronDown } from "lucide-react"
+import { Search, User, LogOut, ChevronDown, Package } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -126,6 +126,14 @@ export function Header() {
                     <p className="font-medium">{user?.name}</p>
                     <p className="text-sm text-gray-500">{user?.email}</p>
                   </div>
+                  <Link
+                    href="/orders"
+                    className="w-full text-left px-4 py-2 flex items-center text-gray-800 hover:bg-gray-50 block"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    <Package className="w-4 h-4 mr-2" />
+                    Мої замовлення
+                  </Link>
                   <button
                     className="w-full text-left px-4 py-2 flex items-center text-gray-800 hover:bg-gray-50"
                     onClick={logout}

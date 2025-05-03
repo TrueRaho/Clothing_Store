@@ -1,22 +1,14 @@
-import { PrismaClient } from './generated/prisma'
+import { PrismaClient } from "@/lib/generated/prisma"
 
-const globalForPrisma = globalThis as unknown as {
+// Предотвращаем создание множества экземпляров PrismaClient в режиме разработки
+const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined
 }
 
-let prisma: PrismaClient
+const prisma = globalForPrisma.prisma ?? new PrismaClient({
+  log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+})
 
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient({
-    log: ['error', 'warn'],
-  })
-} else {
-  if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = new PrismaClient({
-      log: ['query', 'error', 'warn'],
-    })
-  }
-  prisma = globalForPrisma.prisma
-}
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
 
-export { prisma } 
+export default prisma 
